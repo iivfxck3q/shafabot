@@ -1,5 +1,3 @@
-# build.py
-
 import PyInstaller.__main__
 import os
 import platform
@@ -25,7 +23,6 @@ def start_build():
     PyInstaller.__main__.run([
         'app.py',
         '--onefile',
-        # '--windowed',
         '--clean',
         '--upx-dir=upx/',
         '--distpath=.',
