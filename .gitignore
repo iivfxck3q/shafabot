@@ -1,0 +1,9 @@
+dist/
+build/
+library/__pycache__
+library/parsers/__pycache__
+app.spec
+app.exe
+.vscode/
+data/
+.venv/
