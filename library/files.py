@@ -18,8 +18,8 @@ def write_txt(filepath, data):
         os.makedirs(directory)
 
     with open(filepath, 'a', encoding='utf-8') as file:
-        if os.path.getsize(filepath) > 0:
-            file.write('\n')
+        # if os.path.getsize(filepath) > 0:
+        #     file.write('\n')
         file.write(data)
 
 

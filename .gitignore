@@ -1,6 +1,8 @@
 dist/
 build/
 library/__pycache__
+__pycache__/
+apps/__pycache__
 library/parsers/__pycache__
 app.spec
 app.exe

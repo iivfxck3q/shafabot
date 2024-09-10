@@ -1,5 +1,17 @@
 import flet as ft
-import atexit
+import apps.accounts
+
+
+class AppData:
+    pass
+
+
+def tabGenerator(name, contents, alignment=ft.alignment.center):
+    return ft.Tab(
+        text=name,
+        content=ft.Container(
+            content=contents, alignment=alignment)
+    )
 
 
 class App:
@@ -13,11 +25,19 @@ class App:
         self.page.window.full_screen = False
         self.page.vertical_alignment = ft.MainAxisAlignment.START
         self.page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
-        self.selected = {}
-        self.accountsSelected = {}
-        self.initdownloadselected = None
 
-        atexit.register(self.quit)
+        self.page.add(ft.Tabs(      # add tabs
+            selected_index=0,
+            animation_duration=300,
+            tab_alignment=ft.TabAlignment.CENTER,
+            tabs=[
+                tabGenerator(
+                    'Аккаунты', apps.accounts.createTabel(), ft.alignment.top_center),
+                tabGenerator('Загрузки', ft.Text("This is Tab 2")),
+                tabGenerator('Запуск', ft.Text("This is Tab 2")),
+            ],
+            expand=1,
+        ))
 
     def quit(self):
         self.page.window_destroy()
