@@ -1,4 +1,4 @@
-import library.files
+from library.files import File
 import re
 import os
 
@@ -16,6 +16,7 @@ class AccountData:
 class Accounts:
     def __init__(self):
         self.data = []
+        self.file = File('data/accounts.data')
 
     def put(self, data: AccountData):
         self.data.append(data)
@@ -24,10 +25,8 @@ class Accounts:
         save_txt = ''
         for data in self.data:
             save_txt += str(data)+'\n'
-        library.files.write_txt('data/accounts.data',
-                                save_txt)
+        self.file.edit_contents(save_txt)
         self.data = []
-        print('save!')
 
     def __repr__(self):
         return f"Accounts(data={self.data})"
@@ -48,7 +47,9 @@ def decode(data: str) -> Accounts:
 
 def loadAccounts():
     try:
-        accounts = decode(library.files.read_txt("data/accounts.data"))
+        files = File('data/accounts.data')
+        files.get_contents()
+        accounts = decode(files.contents)
     except:
         accounts = Accounts()
         if not os.path.exists('data'):

@@ -10,6 +10,8 @@ def createTabel():
     password = ft.TextField(label="Пароль")
 
     def submit__(e):
+        if username.value == '' and password.value == '':
+            return
         __id = len(accounts.data)+1
         accounts.data.clear()
         accounts.put(library.accounts.AccountData(

@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import requests
 import base64
 import json
-import library.files
+from library.files import File
 
 
 class Data:
@@ -48,9 +48,10 @@ class DataCollection:
 class PostDataCollection:
     def __init__(self):
         self.data = []
+        self.file = File('data/fashiongirl.data')
 
     def put(self, data: PostData):
-        if len(self.data) < 10:
+        if len(self.data) < 50:
             self.data.append(data)
         else:
             self.save()
@@ -59,10 +60,8 @@ class PostDataCollection:
         save_txt = ''
         for data in self.data:
             save_txt += str(data)+'\n'
-        library.files.write_txt('data/fashiongirl.data',
-                                save_txt)
+        self.file.edit_contents(save_txt)
         self.data = []
-        print('save!')
 
     def __repr__(self):
         return f"PostDataCollection(data={self.data})"
@@ -94,13 +93,13 @@ def parsing() -> DataCollection:
         for page in pages:
             href = 'https://fashion-girl.ua'+page.get('href')
             parsing_col.put(Data(href, data.category))
-
     return parsing_col
 
 
-def loader(datas: DataCollection) -> PostDataCollection:
+def loader(pb, datas: DataCollection) -> PostDataCollection:
     post_col = PostDataCollection()
-    for data in datas.data:
+    size_data = len(datas.data)
+    for _i, data in enumerate(datas.data):
         response = requests.get(data.url)
         html_content = response.text
 
@@ -151,4 +150,11 @@ def loader(datas: DataCollection) -> PostDataCollection:
 
         post_col.put(PostData(
             photos, title, description, category, subcategory, sizes, colors, amount, price))
+        percent = (100*(_i+1))/size_data
+        pb.page.controls[0].tabs[1].content.content.controls[2].value = f'Прогресс {
+            round(
+                percent, 2)}%'
+        pb.page.controls[0].tabs[1].content.content.controls[3].value = round(
+            percent/100, 2)
+        pb.page.update()
     return post_col
