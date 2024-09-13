@@ -51,7 +51,7 @@ class PostDataCollection:
         self.file = File('data/fashiongirl.data')
 
     def put(self, data: PostData):
-        if len(self.data) < 50:
+        if len(self.data) < 1:
             self.data.append(data)
         else:
             self.save()

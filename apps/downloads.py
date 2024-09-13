@@ -9,8 +9,10 @@ def createTabel():
     def __init(e):
         global init
         init = library.parsers.fashiongirl.parsing()
+        print(init)
 
     def __start(e):
+        print('\n\n', init)
         library.parsers.fashiongirl.loader(e, init)
     rows = ft.Column(
         [
