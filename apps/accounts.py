@@ -17,7 +17,7 @@ def createTabel():
         accounts.put(library.accounts.AccountData(
             username.value, password.value, __id))
         accounts.save()
-        e.page.controls[0] = createTabel()
+        e.page.controls[0].tabs[0].content = createTabel()
         e.page.update()
     submit = ft.TextButton(text='Подтвердить', on_click=submit__)
     for account in accounts.data:

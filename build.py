@@ -38,6 +38,7 @@ def start_build():
         os.system('clear')
 
     print("Сборка завершена!")
+    __delete(FOLDERS, True)
 
 
 if __name__ == "__main__":
