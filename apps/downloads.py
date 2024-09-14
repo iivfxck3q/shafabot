@@ -9,6 +9,7 @@ def createTabel():
     def __init(e):
         global init
         e.page.controls[0].tabs[1].content.content.controls[0].disabled = True
+        e.page.update()
         init = library.parsers.fashiongirl.parsing()
         e.page.controls[0].tabs[1].content.content.controls[1].disabled = False
         e.page.update()
