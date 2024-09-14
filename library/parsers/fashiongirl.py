@@ -16,7 +16,7 @@ class Data:
 
 
 class PostData:
-    def __init__(self, photos, title, description, category, subcategory, sizes, colors, amount, price) -> None:
+    def __init__(self, photos, title, description, category, subcategory, sizes, colors, amount, price, url) -> None:
         self.photos = photos
         self.title = title
         self.description = description
@@ -26,12 +26,13 @@ class PostData:
         self.colors = colors
         self.amount = amount
         self.price = price
+        self.url = url
 
     def __repr__(self):
-        return (f"PostData(photos={self.photos}, title='{self.title}', description='{self.description}', category='{self.category}', subcategory='{self.subcategory}', sizes={self.sizes}, colors={self.colors}, amount={self.amount}, price={self.price})")
+        return (f"PostData(photos={self.photos}, title='{self.title}', description='{self.description}', category='{self.category}', subcategory='{self.subcategory}', sizes={self.sizes}, colors={self.colors}, amount={self.amount}, price={self.price}, url='{self.url}')")
 
     def __str__(self) -> str:
-        return (f"PostData(photos={self.photos}, title='{self.title}', description='{self.description}', category='{self.category}', subcategory='{self.subcategory}', sizes={self.sizes}, colors={self.colors}, amount={self.amount}, price={self.price})")
+        return (f"PostData(photos={self.photos}, title='{self.title}', description='{self.description}', category='{self.category}', subcategory='{self.subcategory}', sizes={self.sizes}, colors={self.colors}, amount={self.amount}, price={self.price}, url='{self.url}')")
 
 
 class DataCollection:
@@ -100,6 +101,9 @@ def loader(pb, datas: DataCollection) -> PostDataCollection:
     post_col = PostDataCollection()
     size_data = len(datas.data)
     for _i, data in enumerate(datas.data):
+        if data.url in post_col.file.contents:
+            continue
+
         response = requests.get(data.url)
         html_content = response.text
 
@@ -149,7 +153,7 @@ def loader(pb, datas: DataCollection) -> PostDataCollection:
             class_='b-product-cost__price').text.replace(' ₴', ''))
 
         post_col.put(PostData(
-            photos, title, description, category, subcategory, sizes, colors, amount, price))
+            photos, title, description, category, subcategory, sizes, colors, amount, price, data.url))
         percent = (100*(_i+1))/size_data
         pb.page.controls[0].tabs[1].content.content.controls[2].value = f'Прогресс {
             round(

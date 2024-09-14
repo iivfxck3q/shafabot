@@ -1,10 +1,7 @@
 import flet as ft
 import apps.accounts
 import apps.downloads
-
-
-class AppData:
-    pass
+import apps.uploads
 
 
 def tabGenerator(name, contents, alignment=ft.alignment.center):
@@ -35,7 +32,7 @@ class App:
                 tabGenerator(
                     'Аккаунты', apps.accounts.createTabel(), ft.alignment.top_center),
                 tabGenerator('Загрузки', apps.downloads.createTabel()),
-                tabGenerator('Запуск', ft.Text("This is Tab 2")),
+                tabGenerator('Запуск', apps.uploads.createTabel()),
             ],
             expand=1,
         ))

@@ -8,17 +8,18 @@ def createTabel():
 
     def __init(e):
         global init
+        e.page.controls[0].tabs[1].content.content.controls[0].disabled = True
         init = library.parsers.fashiongirl.parsing()
-        print(init)
+        e.page.controls[0].tabs[1].content.content.controls[1].disabled = False
+        e.page.update()
 
     def __start(e):
-        print('\n\n', init)
         library.parsers.fashiongirl.loader(e, init)
     rows = ft.Column(
         [
             ft.TextButton('Инициализация', on_click=__init),
             ft.TextButton(
-                'Скачать', on_click=__start),
+                'Скачать', on_click=__start, disabled=True),
             progress_text, progress,
         ], horizontal_alignment=ft.CrossAxisAlignment.CENTER
     )

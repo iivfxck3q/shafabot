@@ -14,15 +14,16 @@ class Decode:
     colors: Optional[List[str]] = None
     amount: Optional[str] = None
     price: Optional[str] = None
+    url: Optional[str] = None
 
 
 def decode(data: str):
     data = data.splitlines()
     results = []
 
-    for line in data:
+    for _id, line in enumerate(data):
         match = re.search(
-            r"photos=\[(.*?)\], title='(.+?)', description='(.+?)', category='(.+?)', subcategory='(.+?)', sizes=\[(.*?)\], colors=\[(.*?)\], .*?amount=(\d+), .*?price=(\d+)",
+            r"photos=\[(.*?)\], title='(.+?)', description='(.+?)', category='(.+?)', subcategory='(.+?)', sizes=\[(.*?)\], colors=\[(.*?)\], .*?amount=(\d+), .*?price=(\d+), url='(.+?)'",
             line)
 
         if match:
@@ -35,6 +36,7 @@ def decode(data: str):
             colors = match.group(7).replace("'", "").split(", ")
             amount = match.group(8)
             price = match.group(9)
+            url = match.group(10)
 
             decoded_item = Decode(
                 photos=photos,
@@ -45,10 +47,11 @@ def decode(data: str):
                 sizes=sizes,
                 colors=colors,
                 amount=amount,
-                price=price
+                price=price,
+                url=url
             )
             results.append(decoded_item)
         else:
-            print(f"Невозможно распарсить строку: {line}")
+            print(f"Невозможно распарсить строку: {_id+1}")
 
     return results
