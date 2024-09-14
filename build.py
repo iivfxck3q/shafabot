@@ -29,6 +29,7 @@ def start_build():
         '--clean',
         '--upx-dir=upx/',
         '--distpath=.',
+        '--add-data=library/config;library/config'
     ])
 
     system = platform.system()
