@@ -10,11 +10,14 @@ FOLDERS = ['build']
 
 
 def __delete(lists, folder=False):
-    for _ in lists:
-        if folder == False:
-            os.remove(_)
-        else:
-            shutil.rmtree(_)
+    try:
+        for _ in lists:
+            if folder == False:
+                os.remove(_)
+            else:
+                shutil.rmtree(_)
+    except:
+        pass
 
 
 def start_build():
