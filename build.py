@@ -28,8 +28,7 @@ def start_build():
         '--onefile',
         '--clean',
         '--upx-dir=upx/',
-        '--distpath=.',
-        '--add-data=library/config;library/config'
+        '--distpath=.'
     ])
 
     system = platform.system()
@@ -39,6 +38,7 @@ def start_build():
         os.system('clear')
 
     print("Сборка завершена!")
+    __delete(FILES[1:])
     __delete(FOLDERS, True)
 
 

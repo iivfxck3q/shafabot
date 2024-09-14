@@ -69,9 +69,8 @@ class PostDataCollection:
 
 
 def prepare_data() -> DataCollection:
-    with open('library/config/fashiongirl.json', 'r', encoding='utf-8') as file:
-        config = json.load(file)
-
+    import library.config
+    config = library.config.fashiongirl
     collection = DataCollection()
 
     for url_cfg in config:
