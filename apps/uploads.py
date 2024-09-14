@@ -25,6 +25,8 @@ def createTabel():
     random.shuffle(data)
 
     def __start(e):
+        e.page.controls[0].tabs[2].content.content.controls[0].disabled = True
+        e.page.update()
         UPLOADER_DATA = []
         for account in accounts.data:
             UPLOADER_DATA.append(library.uploader.Uploader(
