@@ -11,17 +11,16 @@ import os
 
 class Uploader:
     def __init__(self, username, password) -> None:
-        # self.accounts = accounts
         self.file = File('data/uploads.data')
         self.username = username
         self.password = password
 
-        self.driver = webdriver.Chrome(self.set_options())
+        self.driver = webdriver.Edge(self.set_options())
         self.run()
         self.login()
 
-    def set_options(self) -> webdriver.ChromeOptions:
-        options = webdriver.ChromeOptions()
+    def set_options(self) -> webdriver.EdgeOptions:
+        options = webdriver.EdgeOptions()
         options.add_argument("--start-maximized")
         options.add_argument("--no-first-run")
         options.add_argument("force-device-scale-factor=0.3")
@@ -62,8 +61,6 @@ class Uploader:
 
     def post(self, data: Decode):
         # check
-        if data.url in self.file.contents:
-            return
         # title
         title = WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((By.ID, 'product-name'))
@@ -94,19 +91,15 @@ class Uploader:
         section_subcategory = self.driver.find_element(
             By.XPATH, f"//button[text()='{data.subcategory}']")
         section_subcategory.click()
-        # more size label
-        size_label = WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located(
-                (By.XPATH, "//span[text()='В мене є декілька розмірів']"))
-        )
-        size_label.click()
         # size selection
         succes = 0
         for size in data.sizes:
             size_rebuild = str(int(size)-8)
             try:
-                size_button = self.driver.find_element(
-                    By.XPATH, f"//p[text()={size_rebuild}]")
+                size_button = WebDriverWait(self.driver, 10).until(
+                    EC.presence_of_element_located(
+                        (By.XPATH, f"//p[text()={size_rebuild}]"))
+                )
                 size_button.click()
                 succes += 1
             except:

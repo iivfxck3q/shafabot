@@ -15,7 +15,7 @@ def tabGenerator(name, contents, alignment=ft.alignment.center):
 class App:
     def __init__(self, page: ft.Page):
         self.page = page
-        self.page.title = 'Shafa Bot v2'
+        self.page.title = 'Shafa Bot'
         self.page.window.width = 720
         self.page.window.height = 600
         self.page.window.resizable = True
