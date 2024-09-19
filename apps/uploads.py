@@ -39,7 +39,10 @@ def createTabel():
                 account.username, account.password))
         while True:
             for _iu, cleaner in enumerate(CLEANER_DATA):
-                cleaner.start()
+                try:
+                    cleaner.start()
+                except:
+                    CLEANER_DATA.remove(cleaner)
 
     def __start(e):
         accounts = library.accounts.loadAccounts()

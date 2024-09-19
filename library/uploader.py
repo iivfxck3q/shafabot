@@ -15,12 +15,20 @@ class Uploader:
         self.username = username
         self.password = password
 
-        self.driver = webdriver.Edge(self.set_options())
+        try:
+            self.driver = webdriver.Edge(self.set_options('edge'))
+        except:
+            self.driver = webdriver.Chrome(self.set_options('chrome'))
+
         self.run()
         self.login()
 
-    def set_options(self) -> webdriver.EdgeOptions:
-        options = webdriver.EdgeOptions()
+    def set_options(self, arg):
+        if arg == 'edge':
+            options = webdriver.EdgeOptions()
+        else:
+            options = webdriver.ChromeOptions()
+
         options.add_argument("--start-maximized")
         options.add_argument("--no-first-run")
         options.add_argument("force-device-scale-factor=0.3")
@@ -31,18 +39,28 @@ class Uploader:
     def url_has_changed(self, old_url):
         return self.driver.current_url != old_url
 
+    def find_and_click(self, by, value, alternative=False, timeout=10):
+        element = WebDriverWait(self.driver, timeout).until(
+            EC.presence_of_element_located((by, value)))
+        if alternative:
+            element.click()
+        else:
+            self.driver.execute_script("arguments[0].click();", element)
+
+    def find_and_send(self, by, value, data):
+        element = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((by, value))
+        )
+        element.send_keys(data)
+
     def login(self):
         self.driver.refresh()
-        name = self.driver.find_element(By.NAME, 'username')
-        name.send_keys(self.username)
 
-        password = self.driver.find_element(By.NAME, 'password')
-        password.send_keys(self.password)
+        self.find_and_send(By.NAME, 'username', self.username)
+        self.find_and_send(By.NAME, 'password', self.password)
+        self.find_and_click(By.XPATH, "//button[@type='submit']")
 
-        submit = self.driver.find_element(By.XPATH, "//button[@type='submit']")
-        submit.click()
-
-    def photo_loader(self, photos: list):
+    def photo_loader(self):
         file_input = WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located(
                 (By.CSS_SELECTOR, 'input[type="file"]'))
@@ -55,101 +73,58 @@ class Uploader:
         for photo in file_names:
             file_input.send_keys(os.path.abspath(f'data/temp/{photo}'))
 
-        accept = self.driver.find_element(
-            By.XPATH, "//button[text()='Перейти до завантаження фотографій']")
-        # accept.click()
-
     def post(self, data: Decode):
-        # check
+        # load photos
+        self.photo_loader()
         # title
-        title = WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.ID, 'product-name'))
-        )
-        title.send_keys(data.title)
-
-        # Ожидаем описание
-        description = WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.ID, 'product-description'))
-        )
-        description.send_keys(data.description)
+        self.find_and_send(By.ID, 'product-name', data.title)
+        # description
+        self.find_and_send(By.ID, 'product-description', data.description)
         # state
-        state = self.driver.find_element(By.ID, 'react-select-2-placeholder')
-        state.click()
+        self.find_and_click(By.ID, 'react-select-2-placeholder', True)
         # state new
-        state_new = self.driver.find_element(
-            By.ID, 'react-select-2-option-0')
-        state_new.click()
+        self.find_and_click(By.ID, 'react-select-2-option-0')
         # section
-        section = self.driver.find_element(
-            By.XPATH, "//button[p[text()='Жіночий одяг']]")
-        section.click()
+        self.find_and_click(By.XPATH, "//button[p[text()='Жіночий одяг']]")
         # section category
-        section_category = self.driver.find_element(
-            By.XPATH, f"//button[text()='{data.category}']")
-        section_category.click()
+        self.find_and_click(By.XPATH, f"//button[text()='{data.category}']")
         # section subcategory
-        section_subcategory = self.driver.find_element(
-            By.XPATH, f"//button[text()='{data.subcategory}']")
-        section_subcategory.click()
+        self.find_and_click(By.XPATH, f"//button[text()='{data.subcategory}']")
+        # color selection
+        succes = 0
+        for color in data.colors:
+            try:
+                self.find_and_click(
+                    By.XPATH, f"//span[text()='{color}']", timeout=1)
+                succes += 1
+            except:
+                continue
+        if succes == 0:
+            self.find_and_click(By.XPATH, "//span[text()='Різнокольоровий']")
         # size selection
         succes = 0
         for size in data.sizes:
             size_rebuild = str(int(size)-8)
             try:
-                size_button = WebDriverWait(self.driver, 10).until(
-                    EC.presence_of_element_located(
-                        (By.XPATH, f"//p[text()={size_rebuild}]"))
-                )
-                size_button.click()
+                self.find_and_click(By.XPATH, f"//p[text()={size_rebuild}]")
                 succes += 1
             except:
                 continue
         if succes == 0:
-            size_button = self.driver.find_element(
-                By.XPATH, "//p[text()='Інший']")
-            size_button.click()
-        # color selection
-        succes = 0
-        for color in data.colors:
-            try:
-                color_button = self.driver.find_element(
-                    By.XPATH, f"//span[text()={color}]")
-                color_button.click()
-                succes += 1
-            except:
-                continue
-        if succes == 0:
-            color_button = self.driver.find_element(
-                By.XPATH, "//span[text()='Різнокольоровий']")
-            color_button.click()
+            self.find_and_click(By.XPATH, "//p[text()='Інший']")
         # amount
-        amount = self.driver.find_element(By.XPATH, "//input[@name='count']")
-        amount.send_keys(data.amount)
+        self.find_and_send(By.XPATH, "//input[@name='count']", data.amount)
         # price
-        price = self.driver.find_element(By.ID, 'price')
-        price.send_keys(str(int(data.price)+300))
+        self.find_and_send(By.ID, 'price', str(int(data.price)+300))
         # conditions
-        conditions = self.driver.find_element(
-            By.XPATH, "//label[@for='price']")
-        conditions.click()
+        self.find_and_click(By.XPATH, "//label[@for='price']")
         # tags
-        tags = self.driver.find_element(
-            By.XPATH, "//input[@placeholder='Введіть ключові слова']")
-        tags.send_keys(
-            'Одежа, Сукня, Футболка, Штани, Сорочка, Пальто, Куртка, Светр, Плаття, Юбка, Шорти, Кардиган, Блузка, Жилет, Костюм, Сукня Zara,')
-        # load photos
-        self.photo_loader(data.photos)
+        self.find_and_send(By.XPATH, "//input[@placeholder='Введіть ключові слова']",
+                           'Одежа, Сукня, Футболка, Штани, Сорочка, Пальто, Куртка, Светр, Плаття, Юбка, Шорти, Кардиган, Блузка, Жилет, Костюм, Сукня Zara,')
         # verification
-        verification = self.driver.find_element(
-            By.XPATH, "//label[@for='i-took-pic']")
-        self.driver.execute_script("arguments[0].click();", verification)
+        self.find_and_click(By.XPATH, "//label[@for='i-took-pic']")
         # posting button
-        posting_button = WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located(
-                (By.XPATH, "//button[text()='Додати річ']"))
-        )
-        posting_button.click()
-
+        self.find_and_click(By.XPATH, "//button[text()='Додати річ']")
         # write in file
         for i in range(5):
             if self.driver.current_url == 'https://shafa.ua/uk/new':

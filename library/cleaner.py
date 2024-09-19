@@ -10,12 +10,20 @@ class Cleaner:
         self.username = username
         self.password = password
 
-        self.driver = webdriver.Edge(self.set_options())
+        try:
+            self.driver = webdriver.Edge(self.set_options('edge'))
+        except:
+            self.driver = webdriver.Chrome(self.set_options('chrome'))
+
         self.run()
         self.login()
 
-    def set_options(self) -> webdriver.EdgeOptions:
-        options = webdriver.EdgeOptions()
+    def set_options(self, arg):
+        if arg == 'edge':
+            options = webdriver.EdgeOptions()
+        else:
+            options = webdriver.ChromeOptions()
+
         options.add_argument("--start-maximized")
         options.add_argument("--no-first-run")
         # options.add_argument("force-device-scale-factor=0.3")
