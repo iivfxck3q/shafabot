@@ -3,7 +3,7 @@ fashiongirl = {
     "g23662804-zhenskie-sportivnye-kostyumy": "Спортивний одяг+Спортивні костюми",
     "g24495675-zhenskie-povsednevnye-kostyumy": "Костюми+Брючні костюми",
     "g17032386-zhenskie-platya-batal": "Плаття+Довгі сукні",
-    "g124332931-zhenskie-domashnie-kostyumy": "Одяг для дома та сну+Домашній одяг",
+    "g124332931-zhenskie-domashnie-kostyumy": "Одяг для дому та сну+Домашній одяг",
     "g24495885-zhenskie-kurtki-vetrovki": "Верхній одяг+Вітровки",
     "g23662821-zhenskie-kofty-batal": "Кофти+Худі",
     "g24500781-zhenskie-yubki-shorty": "Спідниці+Міні-спідниці",
@@ -18,7 +18,7 @@ fashiongirl = {
     "g4536044-zhenskie-shtany-bryuki": "Штани та шорти+Брюки",
     "g6623982-zhenskie-kurtki-vetrovki": "Верхній одяг+Вітровки",
     "g2608530-zhenskie-yubki-shorty": "Спідниці+Міні-спідниці",
-    "g124284809-zhenskie-domashnie-kostyumy": "Одяг для дома та сну+Домашній одяг",
+    "g124284809-zhenskie-domashnie-kostyumy": "Одяг для дому та сну+Домашній одяг",
     "g2639589-zhenskie-losiny-legginsy": "Штани та шорти+Лосіни та Легінси",
     "g13742242-zhenskie-kofty-optom": "Кофти+Светри",
     "g2685539-zhenskie-komplekty-nabory": "Костюми+Костюми з шортами"
@@ -119,7 +119,7 @@ shafa = {
         "Брючні комбінезони": [],
         "Комбінезони з шортами": []
     },
-    "Одяг для дома та сну": {
+    "Одяг для дому та сну": {
         "Домашній одяг": [],
         "Піжами": [],
         "Нічні сорочки": [],
