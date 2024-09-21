@@ -16,6 +16,9 @@ def save_base64_image(base64_string, file_path):
     image_data = base64.b64decode(base64_string)
     image = Image.open(io.BytesIO(image_data))
 
+    if image.mode != 'RGB':
+        image = image.convert('RGB')
+
     width, height = image.size
 
     random_x = random.randint(0, width - 1)

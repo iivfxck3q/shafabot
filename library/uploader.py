@@ -40,18 +40,33 @@ class Uploader:
         return self.driver.current_url != old_url
 
     def find_and_click(self, by, value, alternative=False, timeout=10):
-        element = WebDriverWait(self.driver, timeout).until(
-            EC.presence_of_element_located((by, value)))
-        if alternative:
-            element.click()
-        else:
-            self.driver.execute_script("arguments[0].click();", element)
+        status = False
+        for _ in range(timeout*10):
+            time.sleep(timeout/10)
+            try:
+                element = self.driver.find_element(by, value)
+                status = True
+                break
+            except:
+                continue
+        if status:
+            if alternative:
+                element.click()
+            else:
+                self.driver.execute_script("arguments[0].click();", element)
 
-    def find_and_send(self, by, value, data):
-        element = WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((by, value))
-        )
-        element.send_keys(data)
+    def find_and_send(self, by, value, data, timeout=10):
+        status = False
+        for _ in range(timeout*10):
+            time.sleep(timeout/10)
+            try:
+                element = self.driver.find_element(by, value)
+                status = True
+                break
+            except:
+                continue
+        if status:
+            element.send_keys(data)
 
     def login(self):
         self.driver.refresh()
@@ -104,7 +119,10 @@ class Uploader:
         # size selection
         succes = 0
         for size in data.sizes:
-            size_rebuild = str(int(size)-8)
+            try:
+                size_rebuild = str(int(size)-8)
+            except:
+                continue
             try:
                 self.find_and_click(By.XPATH, f"//p[text()={size_rebuild}]")
                 succes += 1
